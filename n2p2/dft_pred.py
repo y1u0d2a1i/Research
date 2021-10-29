@@ -34,26 +34,27 @@ class AnalyzeCSV:
         structures = original_csv['structure'].unique()
         return structures
 
-    def add_column_to_csv(self, original_csv):
+    def add_column_to_csv(self, original_csv, diff=True):
         original_csv['E_ref_sio2'] = original_csv['E_ref']/(original_csv['natom']/3)
         original_csv['E_nnp_sio2'] = original_csv['E_nnp']/(original_csv['natom']/3)
         min_ref_energy = original_csv['E_ref_sio2'].min()
-        original_csv['E_ref_sio2'] = original_csv['E_ref_sio2']-min_ref_energy
+        if diff:
+            original_csv['E_ref_sio2'] = original_csv['E_ref_sio2']-min_ref_energy
+            min_nnp_energy = original_csv[original_csv['E_ref_sio2'] == original_csv['E_ref_sio2'].min()]['E_nnp_sio2']
+            # min_nnp_energy = float(min_nnp_energy)
+            original_csv['E_nnp_sio2'] = original_csv['E_nnp_sio2']-min_ref_energy
 
-        min_nnp_energy = original_csv[original_csv['E_ref_sio2'] == original_csv['E_ref_sio2'].min()]['E_nnp_sio2']
-        min_nnp_energy = float(min_nnp_energy)
-        original_csv['E_nnp_sio2'] = original_csv['E_nnp_sio2']-min_nnp_energy
         original_csv['vol_sio2'] = original_csv['vol']/(original_csv['natom']/3)
         return original_csv
 
-    def concat_csv(self, files, is_save_csv=True, is_add_columns=True):
+    def concat_csv(self, files, is_save_csv=True, is_add_columns=True, diff=True):
         original_csv = pd.read_csv(files[0])
         for file in files[1:]:
             tmp = pd.read_csv(file)
             original_csv = pd.concat([original_csv,tmp], axis=0)
 
         if is_add_columns:
-            original_csv = self.add_column_to_csv(original_csv)
+            original_csv = self.add_column_to_csv(original_csv, diff=diff)
 
         if is_save_csv:
             original_csv.to_csv(f'{self.structure_dir}/concat_all.csv')
@@ -167,7 +168,7 @@ class AnalyzeCSV:
         for structure in structures:
             self.plot_dft_pred(structure, original_csv)
 
-        self.export_error_csv(original_csv)
+        self.export_error_csv(structures,original_csv)
 
 
 
