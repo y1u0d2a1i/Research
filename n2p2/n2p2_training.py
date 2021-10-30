@@ -8,14 +8,15 @@ from n2p2.auto_sf.sfparamgen import SymFuncParamGenerator
 
 class n2p2TrainingFlow():
     def __init__(self, root_dir):
-        self.root_dir = self.root_dir
+        self.root_dir = root_dir
 
     def set_up(self, dir_name, original_data_dir=None):
         os.mkdir(f'{self.root_dir}/{dir_name}')
         if original_data_dir is None:
             original_data_dir = f'{self.root_dir}/original'
-        shutil.copy(f'{original_data_dir}/input.nn', f'{self.root_dir}/{dir_name}')
-        shutil.copy(f'{original_data_dir}/input.data', f'{self.root_dir}/{dir_name}')
+        shutil.copy(f'{original_data_dir}/input.nn.original', f'{self.root_dir}/{dir_name}/')
+        shutil.copy(f'{original_data_dir}/input.data', f'{self.root_dir}/{dir_name}/')
+        os.rename(f'{self.root_dir}/{dir_name}/input.nn.original', f'{self.root_dir}/{dir_name}/input.nn')
         return f'{self.root_dir}/{dir_name}'
 
     def set_up_sf(self, r_cutoff, nb_param_pairs, dir_name):
