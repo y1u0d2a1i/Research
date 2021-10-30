@@ -28,7 +28,8 @@ class n2p2TrainingFlow():
             myGenerator.write_parameter_strings(fileobj=f)
 
 
-    def run_n2p2(self):
+    def run_n2p2(self,dir_name):
+        os.chdir(f'{self.root_dir}/{dir_name}')
         # nnp-norm
         p = subprocess.Popen('nnp-norm', shell=True)
         p.wait()
@@ -38,4 +39,5 @@ class n2p2TrainingFlow():
         #nnp-train
         p = subprocess.Popen('mpirun -np 16 nnp-train', shell=True)
         p.wait()
+        os.chdir(self.root_dir)
 
