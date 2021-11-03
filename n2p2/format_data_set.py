@@ -1,8 +1,9 @@
 class FormatDataSet():
-    def __init__(self, output_dir, output_file, input_dir):
+    def __init__(self, output_dir, output_file, input_dir, is_comment=True):
         self.output_dir = output_dir
         self.output_file = output_file
         self.input_dir = input_dir
+        self.is_comment = is_comment
 
     def qmas_to_n2p2(self):
         # データのファイル名
@@ -50,7 +51,7 @@ class FormatDataSet():
                     export_file.write('begin\n')
 
                     #comment
-                    export_file.write(f'comment structure:{structure} structure_idx:{structure_idx}\n')
+                    # export_file.write(f'comment structure:{structure} structure_idx:{structure_idx}\n')
                     structure_idx += structure_idx
 
                     # lattice

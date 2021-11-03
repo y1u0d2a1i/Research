@@ -20,6 +20,7 @@ while r_cut <= r_cut_max:
         cp_obj.set_up_sf(r_cut, num_pairs, f'nnp-train_{r_cut}_{num_pairs}')
         cp_obj.run_n2p2(f'nnp-train_{r_cut}_{num_pairs}')
         num_pairs += 1
+    num_pairs = pair_min
     r_cut += 1
 
 
