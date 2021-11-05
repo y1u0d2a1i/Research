@@ -1,6 +1,13 @@
 from n2p2.auto_sf.sfparamgen import SymFuncParamGenerator
 
 def auto_generate(r_cutoff, nb_param_pairs, target_file,):
+    """
+    ACSFのパラメータ作成してinput.nnに追記
+    :param r_cutoff:
+    :param nb_param_pairs:
+    :param target_file:
+    :return:
+    """
     myGenerator = SymFuncParamGenerator(elements=['O', 'Si'], r_cutoff = r_cutoff)
     myGenerator.symfunc_type = 'radial'
     myGenerator.generate_radial_params(rule='imbalzano2018', mode='shift', nb_param_pairs=nb_param_pairs)
