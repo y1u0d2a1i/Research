@@ -23,7 +23,7 @@ class ExtractData:
         obj.convert_n2p2_output_to_csv(32,'learning-curve.out','tmp')
         df = pd.read_csv(f'{self.root_dir}/tmp.csv')
         min = df['RMSEpa_Etest_pu'].min()
-        if 'NAN' in min:
+        if 'NAN' in str(min):
             return
         epoch = df[df['RMSEpa_Etest_pu'] == min].epoch
         epoch = epoch.values[0]
