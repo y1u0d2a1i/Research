@@ -1,4 +1,4 @@
-from descriptors.acsf import TwoBodyACSF
+from descriptors.acsf.acsf import TwoBodyACSF
 import glob
 
 obj = TwoBodyACSF(['Si','O'],10,10)
