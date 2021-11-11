@@ -23,6 +23,8 @@ class ExtractData:
         obj.convert_n2p2_output_to_csv(32,'learning-curve.out','tmp')
         df = pd.read_csv(f'{self.root_dir}/tmp.csv')
         min = df['RMSEpa_Etest_pu'].min()
+        if 'NAN' in min:
+            return
         epoch = df[df['RMSEpa_Etest_pu'] == min].epoch
         epoch = epoch.values[0]
         # os.remove(f'{self.root_dir}/tmp.csv')
@@ -30,9 +32,10 @@ class ExtractData:
 
     def copy_file(self, output_dir):
         epoch = self.get_epoch(self.root_dir)
-        epoch = str(epoch).zfill(2)
-        shutil.copy(f'{self.root_dir}/testpoints.0000{epoch}.out', f'{output_dir}/')
-        shutil.copy(f'{self.root_dir}/trainpoints.0000{epoch}.out', f'{output_dir}/')
+        if epoch:
+            epoch = str(epoch).zfill(2)
+            shutil.copy(f'{self.root_dir}/testpoints.0000{epoch}.out', f'{output_dir}/')
+            shutil.copy(f'{self.root_dir}/trainpoints.0000{epoch}.out', f'{output_dir}/')
 
 
 
