@@ -14,7 +14,7 @@ class MergeBase:
             is_structure_idx_plus = True
         return is_structure_idx_plus
     
-    def merge_base(self,rdf_csv_name):
+    def merge_base(self,rdf_csv_name, is_save=False, save_dir=None, save_file_name=None):
         df = pd.read_csv(f'{self.rdf_dir_path}/all/{rdf_csv_name}')
         base_info = pd.read_csv(f'{self.base_path}/base_info.csv')
 
@@ -37,3 +37,12 @@ class MergeBase:
 
         df = pd.merge(df, base_info, on=['structure', 'structure_idx'])
         df['E_atom'] = df.E / df.natom
+
+        if is_save:
+            if save_file_name is None:
+                save_file_name = rdf_csv_name
+            df.to_csv(f'{save_dir}/{save_file_name}')
+
+# obj = MergeBase()
+# save_dir='/Users/y1u0d2/Desktop/Lab/result/rdf/rdf_base_csv'
+# obj.merge_base('all_O-O.csv',is_save=True,save_dir=save_dir)
