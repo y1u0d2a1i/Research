@@ -31,8 +31,8 @@ class ExtractData:
     def copy_file(self, output_dir):
         epoch = self.get_epoch(self.root_dir)
         epoch = str(epoch).zfill(2)
-        shutil.copyfile(f'{self.root_dir}/testpoints.0000{epoch}.out', f'{output_dir}/')
-        shutil.copyfile(f'{self.root_dir}/trainpoints.0000{epoch}.out', f'{output_dir}/')
+        shutil.copy(f'{self.root_dir}/testpoints.0000{epoch}.out', f'{output_dir}/')
+        shutil.copy(f'{self.root_dir}/trainpoints.0000{epoch}.out', f'{output_dir}/')
 
 
 
