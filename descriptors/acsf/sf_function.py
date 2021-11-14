@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class SymmetryFunction:
-    def cutoff_func1(self,r_ij, r_c):
+    def cutoff_func1(self, r_ij, r_c):
         if r_ij <= r_c:
             return 0.5 * (math.cos(((np.pi * r_ij) / r_c)) + 1)
         elif r_ij > r_c:
