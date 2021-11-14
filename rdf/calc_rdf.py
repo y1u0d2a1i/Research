@@ -1,4 +1,3 @@
-
 import sys
 import os
 from pymatgen.core import Structure
@@ -9,7 +8,8 @@ import matplotlib.pyplot as plt
 import glob
 import csv
 
-path_to_csv = '/home/y1u0d2/Program/python/sf/rdf_result'
+from utils.constants.dir_path import DataDirPath
+path_to_csv = '/Users/y1u0d2/desktop/Lab/result/rdf/rdf_result/test'
 def fileconvert2cif(file1, file2):
     """
     file format conversion
@@ -150,6 +150,7 @@ def plot_rdf(dir,center_atom,another_atom,rcut):
             with open(f'{path_to_csv}/{name_of_structure}/{name_of_structure}_{center_atom}-{another_atom}.csv',
                       'a') as f:
                 writer = csv.writer(f)
+                #TODO indexの書き出しに不具合あり O-O O-Si
                 if i == 0 and j == 0:
                     bins_mid_insert = ['name_of_structure', 'structure_idx', 'center_atom', 'another_atom']
                     for tmp in bins_mid_insert:
@@ -157,14 +158,15 @@ def plot_rdf(dir,center_atom,another_atom,rcut):
                         bins_mid.insert(0, tmp)
                     writer.writerow(bins_mid)
                 writer.writerow(hist)
-
-dirs = glob.glob('/home/y1u0d2/Program/python/RDF/xsf/*')
+path_xsf = DataDirPath.xsf()
+dirs = glob.glob(f'{path_xsf}/*')
 for directory in dirs:
     name_of_structure = directory.split('/')[-1].split('_')[-1]
     print(name_of_structure)
     if not os.path.exists(f'{path_to_csv}/{name_of_structure}'):
         os.mkdir(f'{path_to_csv}/{name_of_structure}')
-    plot_rdf(directory, 'Si', 'Si', rcut=15.0)
+
+    # plot_rdf(directory, 'Si', 'Si', rcut=15.0)
     plot_rdf(directory, 'O', 'O', rcut=15.0)
-    plot_rdf(directory, 'Si', 'O', rcut=15.0)
-    plot_rdf(directory, 'O', 'Si', rcut=15.0)
+    # plot_rdf(directory, 'Si', 'O', rcut=15.0)
+    # plot_rdf(directory, 'O', 'Si', rcut=15.0)

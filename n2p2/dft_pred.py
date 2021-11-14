@@ -47,7 +47,7 @@ class AnalyzeCSV:
         original_csv['vol_sio2'] = original_csv['vol']/(original_csv['natom']/3)
         return original_csv
 
-    def concat_csv(self, files, is_save_csv=True, is_add_columns=True, diff=True):
+    def concat_csv(self, files,save_filename=None, is_save_csv=True, is_add_columns=True, diff=True):
         original_csv = pd.read_csv(files[0])
         for file in files[1:]:
             tmp = pd.read_csv(file)
@@ -57,7 +57,10 @@ class AnalyzeCSV:
             original_csv = self.add_column_to_csv(original_csv, diff=diff)
 
         if is_save_csv:
-            original_csv.to_csv(f'{self.structure_dir}/concat_all.csv')
+            if save_filename is None:
+                original_csv.to_csv(f'{self.structure_dir}/concat_all.csv')
+            else:
+                original_csv.to_csv(f'{self.structure_dir}/{save_filename}.csv')
         return original_csv
 
     def plot_training_data_distribution(self, original_csv):
