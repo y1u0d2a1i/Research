@@ -172,6 +172,6 @@ for directory in dirs:
         os.mkdir(f'{path_to_csv}/{name_of_structure}')
 
     plot_rdf(directory, 'Si', 'Si', rcut=15.0)
-    plot_rdf(directory, 'O', 'O', rcut=15.0)
-    plot_rdf(directory, 'Si', 'O', rcut=15.0)
-    plot_rdf(directory, 'O', 'Si', rcut=15.0)
+    # plot_rdf(directory, 'O', 'O', rcut=15.0)
+    # plot_rdf(directory, 'Si', 'O', rcut=15.0)
+    # plot_rdf(directory, 'O', 'Si', rcut=15.0)

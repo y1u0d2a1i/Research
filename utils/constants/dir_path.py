@@ -4,6 +4,10 @@ class DataDirPath:
         return '/Users/y1u0d2/desktop/Lab/data/xsf'
 
     @staticmethod
+    def xsf_gpu():
+        return '/home/y1u0d2/Program/python/RDF/xsf'
+
+    @staticmethod
     def qmas_data():
         return '/Users/y1u0d2/desktop/Lab/data/qmas_data'
 
