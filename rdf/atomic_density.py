@@ -146,7 +146,7 @@ class AtomicDensity:
                     print(density,n_center_atom)
                     writer.writerow([structure_idx,name_of_structure,n_center_atom,density,'O','O'])
 
-
-atomic_density = AtomicDensity('/Users/y1u0d2/desktop/Lab/Program/python/RDF/20211031/density','/Users/y1u0d2/desktop/Lab/Program/python/RDF/xsf')
-atomic_density.run_this_func()
+if __name__ == '__main__':
+    atomic_density = AtomicDensity('/Users/y1u0d2/desktop/Lab/Program/python/RDF/20211031/density','/Users/y1u0d2/desktop/Lab/Program/python/RDF/xsf')
+    atomic_density.run_this_func()
 
