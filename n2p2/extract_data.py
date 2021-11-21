@@ -18,9 +18,10 @@ class ExtractData:
     def __init__(self, root_dir):
         self.root_dir = root_dir
 
-    def get_epoch(self,target_dir):
+    def get_epoch(self,target_dir, is_normalize=True):
+        header_index = 32 if is_normalize else 20
         obj = ConvertCsv(self.root_dir, target_dir)
-        obj.convert_n2p2_output_to_csv(32,'learning-curve.out','tmp')
+        obj.convert_n2p2_output_to_csv(header_index,'learning-curve.out','tmp')
         df = pd.read_csv(f'{self.root_dir}/tmp.csv')
         min = df['RMSEpa_Etest_pu'].min()
         if 'NAN' in str(min):
