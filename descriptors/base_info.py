@@ -1,7 +1,11 @@
 #Qmasデータから　構造名,構造index,原子数,エネルギー,体積 → CSV出力
 
 import csv
+import pandas as pd
 from utils.calc_info import calc_vol
+from utils.constants.constants import Constants
+from utils.constants.dir_path import DataDirPath
+
 
 class BaseInfoFromQmas():
     def __init__(self, output_dir,output_file,qmas_dir):
@@ -76,3 +80,22 @@ class BaseInfoFromQmas():
 
                     writer.writerow([structure,i+1,number_of_atom,energy,vol])
         export_file.close()
+
+def get_reindex_base():
+    """
+    各構造ごとのindexを全ての構造のindexにする
+    :return: reindexされた基本情報csv
+    """
+    base_info = DataDirPath.base_structure_info()
+    base_df = pd.read_csv(f'{base_info}/base_info.csv')
+    PATH = Constants.path()
+    plus = 0
+    for structure in PATH:
+        structure = structure.split('_')[-1]
+        base_df.loc[base_df.structure == structure, ['structure_idx']] += plus
+        idx = base_df[base_df.structure == structure].structure_idx.unique()
+        idx.sort()
+        plus = idx[-1]
+        print(structure, idx[0], idx[-1])
+    return base_df
+
