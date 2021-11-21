@@ -50,13 +50,13 @@ class FormatDataSet():
                     # begin出力
                     export_file.write('begin\n')
 
-                    #comment
-                    # export_file.write(f'comment structure:{structure} structure_idx:{structure_idx}\n')
-                    structure_idx += structure_idx
+                    # comment
+                    export_file.write(f'comment structure:{structure} structure_idx:{structure_idx}.\n')
+                    print(structure_idx)
+                    structure_idx += 1
 
                     # lattice
                     lattice_block = block[lattice_index:lattice_index + 3]
-                    print(lattice_block)
 
                     for lattice in lattice_block:
                         export_file.write(f'lattice {lattice}\n')

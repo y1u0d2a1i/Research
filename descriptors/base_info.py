@@ -81,9 +81,10 @@ class BaseInfoFromQmas():
                     writer.writerow([structure,i+1,number_of_atom,energy,vol])
         export_file.close()
 
-def get_reindex_base():
+def get_reindex_base(is_from_zero=True):
     """
     各構造ごとのindexを全ての構造のindexにする
+    :param: indexのスタート
     :return: reindexされた基本情報csv
     """
     base_info = DataDirPath.base_structure_info()
@@ -97,5 +98,8 @@ def get_reindex_base():
         idx.sort()
         plus = idx[-1]
         print(structure, idx[0], idx[-1])
+    if is_from_zero:
+        base_df['structure_idx'] -= 1
     return base_df
+
 
