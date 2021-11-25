@@ -3,6 +3,7 @@ import os
 import csv
 import pandas as pd
 import numpy as np
+import shutil
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 from utils.convert_csv import ConvertCsv
@@ -57,8 +58,8 @@ class N2p2AnalyzeFlow():
             writer.writerow(train_score)
 
 if __name__ == '__main__':
-    dir_path = '/Users/y1u0d2/Desktop/Lab/result/nnp-train/rdf-inform/20211117'
-    def conduct_flow(dir_path):
+    # dir_path = '/Users/y1u0d2/Desktop/Lab/result/nnp-train/20211123'
+    def conduct_flow(dir_path, is_send_local=False, scp_dir_path=None):
         analyze_flow = N2p2AnalyzeFlow(dir_path)
         analyze_flow.make_analyze_dir()
         analyze_flow.convert_test_train_csv()
@@ -79,7 +80,12 @@ if __name__ == '__main__':
                 analyze_flow.write_score_csv(epoch, test_score, train_score)
             except Exception as e:
                 continue
-    conduct_flow(dir_path)
-    # dirs = glob.glob('/Users/y1u0d2/Desktop/Lab/result/nnp-train/two-body/for_angular/nnp*')
-    # for directory in dirs:
-    #     conduct_flow(directory)
+        if is_send_local and scp_dir_path is not None:
+            dir_name = directory.split('/')[-1]
+            if not os.path.exists(f'{scp_dir_path}/{dir_name}'):
+                os.mkdir(f'{scp_dir_path}/{dir_name}')
+            shutil.copytree(f'{dir_path}/analyze', f'{scp_dir_path}/{dir_name}')
+
+    dirs = glob.glob('/home/y1u0d2/Program/n2p2/20211124/nnp*')
+    for directory in dirs:
+        conduct_flow(directory, is_send_local=True, scp_dir_path='/home/y1u0d2/Program/n2p2/20211124/scp')
