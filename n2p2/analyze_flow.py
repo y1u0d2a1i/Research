@@ -63,7 +63,7 @@ if __name__ == '__main__':
         analyze_flow = N2p2AnalyzeFlow(dir_path)
         analyze_flow.make_analyze_dir()
         analyze_flow.convert_test_train_csv()
-        base_df = get_reindex_base()
+        base_df = get_reindex_base(is_gpu=True)
         all_test_csv = glob.glob(f'{dir_path}/analyze/testpoints*')
         all_train_csv = glob.glob(f'{dir_path}/analyze/trainpoints*')
         all_test_csv.sort()

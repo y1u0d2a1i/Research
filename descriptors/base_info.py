@@ -81,13 +81,15 @@ class BaseInfoFromQmas():
                     writer.writerow([structure,i+1,number_of_atom,energy,vol])
         export_file.close()
 
-def get_reindex_base(is_from_zero=True):
+def get_reindex_base(is_from_zero=True, is_gpu=False):
     """
     各構造ごとのindexを全ての構造のindexにする
     :param: indexのスタート
     :return: reindexされた基本情報csv
     """
     base_info = DataDirPath.base_structure_info()
+    if is_gpu:
+        base_info = DataDirPath.base_structure_info_gpu()
     base_df = pd.read_csv(f'{base_info}/base_info.csv')
     PATH = Constants.path()
     plus = 0

@@ -16,5 +16,9 @@ class DataDirPath:
         return '/Users/y1u0d2/Desktop/Lab/data/base_info'
 
     @staticmethod
+    def base_structure_info_gpu():
+        return '/home/y1u0d2/data/base_info'
+
+    @staticmethod
     def rdf_result():
         return '/Users/y1u0d2/Desktop/Lab/data/rdf_result/csv'
