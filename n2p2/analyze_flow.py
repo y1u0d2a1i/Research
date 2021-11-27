@@ -63,7 +63,7 @@ if __name__ == '__main__':
         analyze_flow = N2p2AnalyzeFlow(dir_path)
         analyze_flow.make_analyze_dir()
         analyze_flow.convert_test_train_csv()
-        base_df = get_reindex_base(is_gpu=True)
+        base_df = get_reindex_base(is_gpu=False)
         all_test_csv = glob.glob(f'{dir_path}/analyze/testpoints*')
         all_train_csv = glob.glob(f'{dir_path}/analyze/trainpoints*')
         all_test_csv.sort()
@@ -84,8 +84,8 @@ if __name__ == '__main__':
             dir_name = directory.split('/')[-1]
             if not os.path.exists(f'{scp_dir_path}/{dir_name}'):
                 os.mkdir(f'{scp_dir_path}/{dir_name}')
-            shutil.copytree(f'{dir_path}/analyze', f'{scp_dir_path}/{dir_name}')
+            shutil.move(f'{dir_path}/analyze', f'{scp_dir_path}/{dir_name}/')
 
-    dirs = glob.glob('/home/y1u0d2/Program/n2p2/20211124/nnp*')
+    dirs = glob.glob('/Users/y1u0d2/Desktop/Lab/result/nnp-train/rdf-inform/20211117/angular/01')
     for directory in dirs:
-        conduct_flow(directory, is_send_local=True, scp_dir_path='/home/y1u0d2/Program/n2p2/20211124/scp')
+        conduct_flow(directory)

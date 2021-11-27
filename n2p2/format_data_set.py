@@ -4,6 +4,12 @@ class FormatDataSet():
         self.output_file = output_file
         self.input_dir = input_dir
         self.is_comment = is_comment
+        # Bohr -> ang
+        self.CONVERT_ANG = 0.529177;
+        # Hartree -> eV
+        self.CONVERT_EV = 27.2114;
+        # Hartree/Bohr -> eV/ang
+        self.CONVERT_FORCE = self.CONVERT_EV / self.CONVERT_ANG;
 
     def qmas_to_n2p2(self):
         # データのファイル名
@@ -20,7 +26,7 @@ class FormatDataSet():
 
         # 出力ファイル
         export_file = open(f'{self.output_dir}/{self.output_file}', 'a')
-        structure_idx = 1
+        structure_idx = 0
         for raw_data_file in PATH:
             structure = raw_data_file.split('_')[-1]
             with open(f'{self.input_dir}/{raw_data_file}') as file:
@@ -52,13 +58,14 @@ class FormatDataSet():
 
                     # comment
                     export_file.write(f'comment structure:{structure} structure_idx:{structure_idx}.\n')
-                    print(structure_idx)
                     structure_idx += 1
 
                     # lattice
                     lattice_block = block[lattice_index:lattice_index + 3]
 
                     for lattice in lattice_block:
+                        # convert
+                        # lattice = ' '.join([str(float(i) * self.CONVERT_ANG) for i in lattice.split(' ')])
                         export_file.write(f'lattice {lattice}\n')
 
                     # atom
@@ -69,6 +76,12 @@ class FormatDataSet():
                     for position, force in zip(position_block, force_block):
                         position = position.split()[2:]
                         force = force.split()[1:]
+                        # convert
+                        # position = [str(float(i) * self.CONVERT_ANG) for i in position]
+                        atom = force[0]
+                        force = [str(float(i) * self.CONVERT_FORCE) for i in force[1:]]
+                        force.insert(0, atom)
+
                         force.insert(1, '0.0')
                         force.insert(1, '0.0')
                         row = position + force
@@ -78,8 +91,8 @@ class FormatDataSet():
                         atom_str = ' '.join(atom)
                         export_file.write(f'atom {atom_str}\n')
 
-                    # energy
-                    energy = float(block[energy_index].split()[1])
+                    # TODO energy
+                    energy = float(block[energy_index].split()[1]) * self.CONVERT_EV
                     export_file.write(f'energy {energy}\n')
 
                     # charge
@@ -90,3 +103,8 @@ class FormatDataSet():
                     export_file.write('end\n')
 
         export_file.close()
+
+if __name__ == '__main__':
+    obj = FormatDataSet('/Users/y1u0d2/desktop/Lab/data/n2p2_input/convert_unit', 'input.data',
+                        '/Users/y1u0d2/desktop/Lab/Program/python/qmas_data')
+    obj.qmas_to_n2p2()

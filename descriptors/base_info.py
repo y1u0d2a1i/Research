@@ -12,6 +12,12 @@ class BaseInfoFromQmas():
         self.output_dir = output_dir
         self.qmas_dir = qmas_dir
         self.output_file = output_file
+        # Bohr -> ang
+        self.CONVERT_ANG = 0.529177;
+        # Hartree -> eV
+        self.CONVERT_EV = 27.2114;
+        # Hartree/Bohr -> eV/ang
+        self.CONVERT_FORCE = self.CONVERT_EV / self.CONVERT_ANG;
 
     def base_info_from_qmas(self):
         # データのファイル名
@@ -57,10 +63,16 @@ class BaseInfoFromQmas():
                 # n2p2のフォーマットに変更
                 for i,block in enumerate(block_list):
 
-                    # lattice
+                    # lattice convert
                     lattice_block = block[lattice_index:lattice_index + 3]
-                    print(lattice_block)
+                    # lattice_arr = []
+                    # for lattice in lattice_block:
+                    #     lattice = ' '.join(
+                    #         [str(float(i) * self.CONVERT_ANG) for i in lattice.split(' ')])
+                    #     lattice_arr.append(lattice)
+
                     vol = calc_vol(lattice_block)
+                    # vol = calc_vol(lattice_arr)
 
                     # atom
                     position_block = block[position_abs_index:position_abs_index + number_of_atom]
@@ -76,12 +88,13 @@ class BaseInfoFromQmas():
                         atom_block.append(row)
 
                     # energy
-                    energy = float(block[energy_index].split()[1])
+                    # energy = float(block[energy_index].split()[1])
+                    energy = float(block[energy_index].split()[1]) * self.CONVERT_EV
 
                     writer.writerow([structure,i+1,number_of_atom,energy,vol])
         export_file.close()
 
-def get_reindex_base(is_from_zero=True, is_gpu=False):
+def get_reindex_base(is_from_zero=True, is_gpu=False, is_convert_unit=False):
     """
     各構造ごとのindexを全ての構造のindexにする
     :param: indexのスタート
@@ -90,7 +103,11 @@ def get_reindex_base(is_from_zero=True, is_gpu=False):
     base_info = DataDirPath.base_structure_info()
     if is_gpu:
         base_info = DataDirPath.base_structure_info_gpu()
+
     base_df = pd.read_csv(f'{base_info}/base_info.csv')
+    if is_convert_unit:
+        base_df = pd.read_csv(f'{base_info}/base_info_convert.csv')
+
     PATH = Constants.path()
     plus = 0
     for structure in PATH:
@@ -103,5 +120,12 @@ def get_reindex_base(is_from_zero=True, is_gpu=False):
     if is_from_zero:
         base_df['structure_idx'] -= 1
     return base_df
+
+if __name__ == '__main__':
+    output_dir = '/Users/y1u0d2/Desktop/Lab/data/base_info'
+    qmas_dir = '/Users/y1u0d2/desktop/Lab/Program/python/qmas_data'
+
+    obj = BaseInfoFromQmas(output_dir, 'base_info_convert', qmas_dir)
+    obj.base_info_from_qmas()
 
 
