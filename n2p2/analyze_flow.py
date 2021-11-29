@@ -3,6 +3,7 @@ import os
 import csv
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 import shutil
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
@@ -68,6 +69,27 @@ class N2p2AnalyzeFlow():
             writer.writerow(test_score)
             writer.writerow(train_score)
 
+    @staticmethod
+    def plot_epoch_r2(self, directory, save_dir, type='E'):
+        r_cut = directory.split('/')[-1].split('_')[1]
+        num_pairs = directory.split('/')[-1].split('_')[-1]
+        if os.path.exists(f'{directory}/analyze/score_{type}.csv'):
+            df = pd.read_csv(f'{directory}/analyze/score_{type}.csv')
+            df['r_cut'] = r_cut
+            df['num_pairs'] = num_pairs
+            df_test = df[df.type == 'test']
+            df_train = df[df.type == 'train']
+
+            fig = plt.figure(figsize=(6, 4))
+            plt.title(f'r_cut: {r_cut}, num_pairs: {num_pairs}')
+            plt.ylim(0.7, 1.05)
+            plt.xlabel('epoch')
+            plt.ylabel(f'R2({type})')
+            plt.plot(df_test.epoch, df_test.R2, label="test")
+            plt.plot(df_train.epoch, df_train.R2, label="train")
+            plt.legend()
+            fig.savefig(f'{save_dir}/{type}_r_cut-{r_cut}_pairs-{num_pairs}.png')
+
 if __name__ == '__main__':
     # dir_path = '/Users/y1u0d2/Desktop/Lab/result/nnp-train/20211123'
     def conduct_flow(dir_path, is_send_local=False, scp_dir_path=None):
@@ -117,3 +139,7 @@ if __name__ == '__main__':
     dirs = glob.glob('/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/nnp-train_10_10')
     for directory in dirs:
         conduct_flow(directory)
+        save_dir = '/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/scp/pic'
+        N2p2AnalyzeFlow.plot_epoch_r2(directory, save_dir=save_dir, type='E')
+        N2p2AnalyzeFlow.plot_epoch_r2(directory, save_dir=save_dir, type='F')
+
