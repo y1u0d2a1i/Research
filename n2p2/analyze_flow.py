@@ -70,7 +70,7 @@ class N2p2AnalyzeFlow():
             writer.writerow(train_score)
 
     @staticmethod
-    def plot_epoch_r2(self, directory, save_dir, type='E'):
+    def plot_epoch_r2(directory, save_dir, type='E'):
         r_cut = directory.split('/')[-1].split('_')[1]
         num_pairs = directory.split('/')[-1].split('_')[-1]
         if os.path.exists(f'{directory}/analyze/score_{type}.csv'):
