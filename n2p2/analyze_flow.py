@@ -70,7 +70,7 @@ class N2p2AnalyzeFlow():
             writer.writerow(train_score)
 
     @staticmethod
-    def plot_epoch_error(directory, save_dir, error, type='E'):
+    def plot_epoch_error(directory, save_dir, error, type='E', ymin=0, ymax=1):
         error_list = ['R2', 'RMSE', 'MAE', 'MSE']
         if error not in error_list:
             print('invalid error name')
@@ -86,7 +86,7 @@ class N2p2AnalyzeFlow():
 
             fig = plt.figure(figsize=(6, 4))
             plt.title(f'r_cut: {r_cut}, num_pairs: {num_pairs}')
-            plt.ylim(0.9, 1.05)
+            plt.ylim(ymin, ymax)
             plt.xlabel('epoch')
             plt.ylabel(f'{error}({type})')
             plt.plot(df_test.epoch, df_test[error], label="test")
@@ -151,8 +151,8 @@ if __name__ == '__main__':
                 os.mkdir(f'{i}/energy')
             if not os.path.exists(f'{i}/force'):
                 os.mkdir(f'{i}/force')
-        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/energy',error='R2', type='E')
-        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/force',error='R2', type='F')
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/energy',error='R2', type='E', ymin=0.9, ymax=1.05)
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/force',error='R2', type='F', ymin=0.9, ymax=1.05)
         N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{rmse_dir}/energy',error='RMSE', type='E')
         N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{rmse_dir}/force',error='RMSE', type='F')
         N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{mae_dir}/energy',error='MAE', type='E')
