@@ -82,7 +82,7 @@ class N2p2AnalyzeFlow():
 
             fig = plt.figure(figsize=(6, 4))
             plt.title(f'r_cut: {r_cut}, num_pairs: {num_pairs}')
-            plt.ylim(0.7, 1.05)
+            plt.ylim(0.9, 1.05)
             plt.xlabel('epoch')
             plt.ylabel(f'R2({type})')
             plt.plot(df_test.epoch, df_test.R2, label="test")
@@ -91,7 +91,6 @@ class N2p2AnalyzeFlow():
             fig.savefig(f'{save_dir}/{type}_r_cut-{r_cut}_pairs-{num_pairs}.png')
 
 if __name__ == '__main__':
-    # dir_path = '/Users/y1u0d2/Desktop/Lab/result/nnp-train/20211123'
     def conduct_flow(dir_path, is_send_local=False, scp_dir_path=None):
         analyze_flow = N2p2AnalyzeFlow(dir_path)
         analyze_flow.make_analyze_dir()
@@ -136,10 +135,10 @@ if __name__ == '__main__':
                 os.mkdir(f'{scp_dir_path}/{dir_name}')
             shutil.move(f'{dir_path}/analyze', f'{scp_dir_path}/{dir_name}/')
 
-    dirs = glob.glob('/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/nnp-train_10_10')
+    dirs = glob.glob('/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/scp/nnp*')
     for directory in dirs:
-        conduct_flow(directory)
+        # conduct_flow(directory)
         save_dir = '/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/scp/pic'
-        N2p2AnalyzeFlow.plot_epoch_r2(directory, save_dir=save_dir, type='E')
-        N2p2AnalyzeFlow.plot_epoch_r2(directory, save_dir=save_dir, type='F')
+        N2p2AnalyzeFlow.plot_epoch_r2(directory, save_dir=f'{save_dir}/energy/0.9-1.05', type='E')
+        N2p2AnalyzeFlow.plot_epoch_r2(directory, save_dir=f'{save_dir}/force/0.9-1.05', type='F')
 
