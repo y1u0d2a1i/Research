@@ -1,5 +1,0 @@
-pandas
-numpy
-pymatgen
-sklearn
-dscribe

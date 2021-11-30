@@ -1,3 +1,0 @@
-git clone ~
-cd path_to_Research
-python setup.py develop
