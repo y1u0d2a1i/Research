@@ -80,8 +80,8 @@ def plot_rdf(dir,center_atom,another_atom,rcut):
 
     def plot_rdf_div_r2(distancelist, rcut, xmin=1.0, bins=70):
         """
-        multiply histgram by 1/r**2
-        and plot it
+        multiply histgram by 1/ 4pi * r^2 * dr
+       and plot it
 
         @param distancelist : a list of distance
         @param xrange : 1d array [2], min and max

@@ -70,7 +70,11 @@ class N2p2AnalyzeFlow():
             writer.writerow(train_score)
 
     @staticmethod
-    def plot_epoch_r2(directory, save_dir, type='E'):
+    def plot_epoch_error(directory, save_dir, error, type='E'):
+        error_list = ['R2', 'RMSE', 'MAE', 'MSE']
+        if error not in error_list:
+            print('invalid error name')
+            return
         r_cut = directory.split('/')[-1].split('_')[1]
         num_pairs = directory.split('/')[-1].split('_')[-1]
         if os.path.exists(f'{directory}/analyze/score_{type}.csv'):
@@ -84,9 +88,9 @@ class N2p2AnalyzeFlow():
             plt.title(f'r_cut: {r_cut}, num_pairs: {num_pairs}')
             plt.ylim(0.9, 1.05)
             plt.xlabel('epoch')
-            plt.ylabel(f'R2({type})')
-            plt.plot(df_test.epoch, df_test.R2, label="test")
-            plt.plot(df_train.epoch, df_train.R2, label="train")
+            plt.ylabel(f'{error}({type})')
+            plt.plot(df_test.epoch, df_test[error], label="test")
+            plt.plot(df_train.epoch, df_train[error], label="train")
             plt.legend()
             fig.savefig(f'{save_dir}/{type}_r_cut-{r_cut}_pairs-{num_pairs}.png')
 
@@ -138,7 +142,18 @@ if __name__ == '__main__':
     dirs = glob.glob('/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/scp/nnp*')
     for directory in dirs:
         # conduct_flow(directory)
-        save_dir = '/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/scp/pic'
-        N2p2AnalyzeFlow.plot_epoch_r2(directory, save_dir=f'{save_dir}/energy/0.9-1.05', type='E')
-        N2p2AnalyzeFlow.plot_epoch_r2(directory, save_dir=f'{save_dir}/force/0.9-1.05', type='F')
-
+        save_dir = '/Users/y1u0d2/Desktop/Lab/result/nnp-train/20211126/error'
+        r2_dir = f'{save_dir}/r2'
+        rmse_dir = f'{save_dir}/rmse'
+        mae_dir = f'{save_dir}/mae'
+        for i in [r2_dir, rmse_dir, mae_dir]:
+            if not os.path.exists(f'{i}/energy'):
+                os.mkdir(f'{i}/energy')
+            if not os.path.exists(f'{i}/force'):
+                os.mkdir(f'{i}/force')
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/energy',error='R2', type='E')
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/force',error='R2', type='F')
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{rmse_dir}/energy',error='RMSE', type='E')
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{rmse_dir}/force',error='RMSE', type='F')
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{mae_dir}/energy',error='MAE', type='E')
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{mae_dir}/force',error='MAE', type='F')
