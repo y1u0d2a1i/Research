@@ -147,6 +147,8 @@ if __name__ == '__main__':
         rmse_dir = f'{save_dir}/rmse'
         mae_dir = f'{save_dir}/mae'
         for i in [r2_dir, rmse_dir, mae_dir]:
+            if not os.path.exists(i):
+                os.mkdir(i)
             if not os.path.exists(f'{i}/energy'):
                 os.mkdir(f'{i}/energy')
             if not os.path.exists(f'{i}/force'):
