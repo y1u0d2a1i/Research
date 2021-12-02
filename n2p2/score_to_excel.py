@@ -1,4 +1,5 @@
 # scoreをexcelのシートにまとめる
+# TODO functional implementation
 import glob
 import os.path
 

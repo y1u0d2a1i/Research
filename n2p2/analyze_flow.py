@@ -70,6 +70,17 @@ class N2p2AnalyzeFlow():
             writer.writerow(train_score)
 
     @staticmethod
+    def get_base_merged_df(df_test, df_train, base_df, type="E"):
+        if type == "E":
+            df_test_new = pd.merge(df_test, base_df, left_on='index', right_on='structure_idx')
+            df_train_new = pd.merge(df_train, base_df, left_on='index', right_on='structure_idx')
+        elif type == "F":
+            df_test_new = pd.merge(df_test, base_df, left_on='index_s', right_on='structure_idx')
+            df_train_new = pd.merge(df_train, base_df, left_on='index_s', right_on='structure_idx')
+        return df_test_new, df_train_new
+
+
+    @staticmethod
     def plot_epoch_error(directory, save_dir, error, type='E', ymin=0, ymax=1):
         error_list = ['R2', 'RMSE', 'MAE', 'MSE']
         if error not in error_list:
@@ -93,6 +104,113 @@ class N2p2AnalyzeFlow():
             plt.plot(df_train.epoch, df_train[error], label="train")
             plt.legend()
             fig.savefig(f'{save_dir}/{type}_r_cut-{r_cut}_pairs-{num_pairs}.png')
+    
+    @staticmethod
+    def plot_dft_pred(csv_path, save_path, setting_path, epoch, type='E', prefix=0):
+        """
+        plot dft vs pred from n2p2 output csv
+        :param save_path: path to save folder
+        :param csv_path: path to analyze dir
+        :param setting_path: path to input.nn(normed)
+        :param epoch:
+        :param type: E(Energy) or F(Force)
+        :return:
+        """
+        # csv_path = '/Users/y1u0d2/Desktop/Lab/result/nnp-train/20211126/scp/nnp-train_15_10'
+        epoch = str(epoch).zfill(2)
+        base_df = get_reindex_base()
+        if type == "E":
+            df_test = pd.read_csv(f'{csv_path}/testpoints.0000{epoch}.out.csv')
+            df_train = pd.read_csv(f'{csv_path}/trainpoints.0000{epoch}.out.csv')
+        elif type == "F":
+            df_test = pd.read_csv(f'{csv_path}/testforces.0000{epoch}.out.csv')
+            df_train = pd.read_csv(f'{csv_path}/trainforces.0000{epoch}.out.csv')
+        # add columns about type
+        df_test['type'] = 'test'
+        df_train['type'] = 'train'
+        df_test_new, df_train_new = N2p2AnalyzeFlow.get_base_merged_df(df_test=df_test, df_train=df_train, base_df=base_df, type=type)
+        df_concat = pd.concat([df_test_new, df_train_new])
+        # NAN処理
+        df_bool = df_concat == '-NAN'
+        if df_bool.values.sum() > 0:
+            print('NANが含まれています')
+            return
+
+        setting_path = f'{setting_path}/input.nn'
+        with open(setting_path) as f:
+            l_strip = [line.strip() for line in f.readlines()]
+            l_strip = list(filter(None, l_strip))
+            mean_arr = [line for line in l_strip if 'mean_energy' in line]
+            # sigma e
+            norm_arr = [line for line in l_strip if 'conv_energy' in line]
+            # sigma f
+            norm_force_arr = [line for line in l_strip if 'conv_length' in line]
+
+        mean = ""
+        conv_e = ""
+        conv_l = ""
+        for mean, norm, norm_force in zip(mean_arr, norm_arr, norm_force_arr):
+            mean = float(mean.split(' ')[-1])
+            conv_e = float(norm.split(' ')[-1])
+            conv_l = float(norm_force.split(' ')[-1])
+            norm = 1/conv_e
+
+        if type == "E":
+            df_concat['Ediff'] = df_concat.natom * norm * (df_concat.Eref - df_concat.Ennp)
+            df_concat['E_nnp_from_norm'] = df_concat.natom * ((norm * df_concat.Ennp) + mean)
+            df_concat['E_ref_from_norm'] = df_concat.natom * ((norm * df_concat.Eref) + mean)
+            df_concat['E_ref_sio2'] = df_concat['E_ref_from_norm'] / (df_concat.natom)
+            df_concat['E_nnp_sio2'] = df_concat['E_nnp_from_norm'] / (df_concat.natom)
+            min_energy = df_concat['E_ref_sio2'].min()
+            df_concat['E_ref_sio2'] -= min_energy
+            df_concat['E_nnp_sio2'] -= min_energy
+            xmin = 0
+            xmax = df_concat['E_ref_sio2'].max()
+            x = np.linspace(xmin, xmax, 100)
+            y = x
+            # train
+            fig, ax = plt.subplots()
+            plt.plot(x, y, color='red')
+            ax.scatter(df_concat[df_concat.type == 'train']['E_ref_sio2'], df_concat[df_concat.type == 'train']['E_nnp_sio2'])
+            ax.set_title('Train : DFT vs Prediction')
+            ax.set_xlabel('DFT_train')
+            ax.set_ylabel('Prediction_train')
+            fig.savefig(f'{save_path}/train_energy_{prefix}.png')
+            # test
+            fig, ax = plt.subplots()
+            plt.plot(x, y, color='red')
+            ax.scatter(df_concat[df_concat.type == 'test']['E_ref_sio2'], df_concat[df_concat.type == 'test']['E_nnp_sio2'])
+            ax.set_title('test : DFT vs Prediction')
+            ax.set_xlabel('DFT_test')
+            ax.set_ylabel('Prediction_test')
+            fig.savefig(f'{save_path}/test_energy_{prefix}.png')
+        elif type == "F":
+            CONVERT_FACTOR = conv_l/conv_e
+            df_concat['Fdiff'] = CONVERT_FACTOR * (df_concat.Fref - df_concat.Fnnp)
+            df_concat['F_nnp_from_norm'] = CONVERT_FACTOR * df_concat.Fnnp
+            df_concat['F_ref_from_norm'] = CONVERT_FACTOR * df_concat.Fref
+            xmin = 0
+            xmax = df_concat['F_ref_from_norm'].max()
+            x = np.linspace(-xmax, xmax, 100)
+            y = x
+            # train
+            fig, ax = plt.subplots()
+            plt.plot(x, y, color='red')
+            ax.scatter(df_concat[df_concat.type == 'train']['F_ref_from_norm'], df_concat[df_concat.type == 'train']['F_nnp_from_norm'])
+            ax.set_title('Train : DFT vs Prediction')
+            ax.set_xlabel('DFT_train')
+            ax.set_ylabel('Prediction_train')
+            fig.savefig(f'{save_path}/train_force_{prefix}.png')
+            # test
+            fig, ax = plt.subplots()
+            plt.plot(x, y, color='red')
+            ax.scatter(df_concat[df_concat.type == 'test']['F_ref_from_norm'], df_concat[df_concat.type == 'test']['F_nnp_from_norm'])
+            ax.set_title('test : DFT vs Prediction')
+            ax.set_xlabel('DFT_test')
+            ax.set_ylabel('Prediction_test')
+            fig.savefig(f'{save_path}/test_energy_{prefix}.png')
+        
+
 
 if __name__ == '__main__':
     def conduct_flow(dir_path, is_send_local=False, scp_dir_path=None):
@@ -100,8 +218,9 @@ if __name__ == '__main__':
         analyze_flow.make_analyze_dir()
         analyze_flow.convert_test_train_csv(type=1)
         analyze_flow.convert_test_train_csv(type=2)
-        # Energy
         base_df = get_reindex_base(is_gpu=False)
+
+        # Energy
         all_test_csv = glob.glob(f'{dir_path}/analyze/testpoints*')
         all_train_csv = glob.glob(f'{dir_path}/analyze/trainpoints*')
         all_test_csv.sort()
@@ -140,22 +259,38 @@ if __name__ == '__main__':
             shutil.move(f'{dir_path}/analyze', f'{scp_dir_path}/{dir_name}/')
 
     dirs = glob.glob('/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/scp/nnp*')
-    for directory in dirs:
+    for i, directory in enumerate(dirs):
         # conduct_flow(directory)
-        save_dir = '/Users/y1u0d2/Desktop/Lab/result/nnp-train/20211126/error'
-        r2_dir = f'{save_dir}/r2'
-        rmse_dir = f'{save_dir}/rmse'
-        mae_dir = f'{save_dir}/mae'
-        for i in [r2_dir, rmse_dir, mae_dir]:
-            if not os.path.exists(i):
-                os.mkdir(i)
-            if not os.path.exists(f'{i}/energy'):
-                os.mkdir(f'{i}/energy')
-            if not os.path.exists(f'{i}/force'):
-                os.mkdir(f'{i}/force')
-        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/energy',error='R2', type='E', ymin=0.9, ymax=1.05)
-        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/force',error='R2', type='F', ymin=0.9, ymax=1.05)
-        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{rmse_dir}/energy',error='RMSE', type='E')
-        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{rmse_dir}/force',error='RMSE', type='F')
-        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{mae_dir}/energy',error='MAE', type='E')
-        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{mae_dir}/force',error='MAE', type='F')
+        # save_dir = '/Users/y1u0d2/Desktop/Lab/result/nnp-train/20211126/error'
+        # r2_dir = f'{save_dir}/r2'
+        # rmse_dir = f'{save_dir}/rmse'
+        # mae_dir = f'{save_dir}/mae'
+        # for i in [r2_dir, rmse_dir, mae_dir]:
+        #     if not os.path.exists(i):
+        #         os.mkdir(i)
+        #     if not os.path.exists(f'{i}/energy'):
+        #         os.mkdir(f'{i}/energy')
+        #     if not os.path.exists(f'{i}/force'):
+        #         os.mkdir(f'{i}/force')
+        # N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/energy',error='R2', type='E', ymin=0.9, ymax=1.05)
+        # N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/force',error='R2', type='F', ymin=0.9, ymax=1.05)
+        # N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{rmse_dir}/energy',error='RMSE', type='E')
+        # N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{rmse_dir}/force',error='RMSE', type='F')
+        # N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{mae_dir}/energy',error='MAE', type='E')
+        # N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{mae_dir}/force',error='MAE', type='F')
+        # plot dft vs pred
+        print(directory)
+        # N2p2AnalyzeFlow.plot_dft_pred(f'{directory}/analyze',
+        #                               save_path='/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/dft_vs_pred',
+        #                               setting_path='/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/scp/original',
+        #                               epoch = 10,
+        #                               type='E',
+        #                               prefix = i
+        #                               )
+        N2p2AnalyzeFlow.plot_dft_pred(f'{directory}/analyze',
+                                      save_path='/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/dft_vs_pred',
+                                      setting_path='/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/scp/original',
+                                      epoch = 10,
+                                      type='F',
+                                      prefix = i
+                                      )
