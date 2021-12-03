@@ -3,7 +3,7 @@ from pptx.util import Inches
 from PIL import Image
 import glob
 
-TARGET_DIR = '/Users/y1u0d2/desktop/Lab/result/nnp-train/20211130/beta_11/error/rmse'
+TARGET_DIR = '/Users/y1u0d2/desktop/Lab/result/nnp-train/20211130/beta_100/error/r2'
 energy_pic = glob.glob(f'{TARGET_DIR}/energy/*.png')
 force_pic = glob.glob(f'{TARGET_DIR}/force/*.png')
 energy_pic.sort()
@@ -11,7 +11,7 @@ force_pic.sort()
 
 IMG_DISPLAY_HEIGHT = Inches(3)  # 画像サイズ
 PIC_PER_PAGE = 4
-OUTPUT_FILE_NAME = f"/Users/y1u0d2/desktop/Lab/result/nnp-train/20211130/beta_11/rmse.pptx"  # 出力ファイル名
+OUTPUT_FILE_NAME = f"/Users/y1u0d2/desktop/Lab/result/nnp-train/20211130/beta_100/r2.pptx"  # 出力ファイル名
 
 slides=0
 if len(energy_pic) % 2 == 0:
@@ -60,3 +60,4 @@ for i in range(int(slides)):
         slide.shapes.add_picture(force_pic_2, left, top, height=IMG_DISPLAY_HEIGHT)
 
 prs.save(OUTPUT_FILE_NAME)
+# TODO convert pdf

@@ -7,6 +7,14 @@ class ConvertCsv():
         self.output_dir = output_dir
 
     def convert_n2p2_output_to_csv(self, header_index, target_file, output_file_name=None, diff=2):
+        """
+
+        :param header_index: start from 0
+        :param target_file:
+        :param output_file_name:
+        :param diff:
+        :return:
+        """
         all_data = []
         with open(f'{self.target_dir}/{target_file}') as f:
             l_strip = [line.strip() for line in f.readlines()]
