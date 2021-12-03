@@ -218,7 +218,7 @@ if __name__ == '__main__':
         analyze_flow.make_analyze_dir()
         analyze_flow.convert_test_train_csv(type=1)
         analyze_flow.convert_test_train_csv(type=2)
-        base_df = get_reindex_base(is_gpu=False)
+        base_df = get_reindex_base(is_gpu=True)
 
         # Energy
         all_test_csv = glob.glob(f'{dir_path}/analyze/testpoints*')
@@ -258,28 +258,28 @@ if __name__ == '__main__':
                 os.mkdir(f'{scp_dir_path}/{dir_name}')
             shutil.move(f'{dir_path}/analyze', f'{scp_dir_path}/{dir_name}/')
 
-    dirs = glob.glob('/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/scp/nnp*')
+    dirs = glob.glob('/home/y1u0d2/Program/n2p2/20211130_2/beta_13/nnp*')
     for i, directory in enumerate(dirs):
-        # conduct_flow(directory)
-        # save_dir = '/Users/y1u0d2/Desktop/Lab/result/nnp-train/20211126/error'
-        # r2_dir = f'{save_dir}/r2'
-        # rmse_dir = f'{save_dir}/rmse'
-        # mae_dir = f'{save_dir}/mae'
-        # for i in [r2_dir, rmse_dir, mae_dir]:
-        #     if not os.path.exists(i):
-        #         os.mkdir(i)
-        #     if not os.path.exists(f'{i}/energy'):
-        #         os.mkdir(f'{i}/energy')
-        #     if not os.path.exists(f'{i}/force'):
-        #         os.mkdir(f'{i}/force')
-        # N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/energy',error='R2', type='E', ymin=0.9, ymax=1.05)
-        # N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/force',error='R2', type='F', ymin=0.9, ymax=1.05)
-        # N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{rmse_dir}/energy',error='RMSE', type='E')
-        # N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{rmse_dir}/force',error='RMSE', type='F')
-        # N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{mae_dir}/energy',error='MAE', type='E')
-        # N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{mae_dir}/force',error='MAE', type='F')
+        conduct_flow(directory)
+        save_dir = '/home/y1u0d2/Program/n2p2/20211130_2/beta_13/error'
+        r2_dir = f'{save_dir}/r2'
+        rmse_dir = f'{save_dir}/rmse'
+        mae_dir = f'{save_dir}/mae'
+        for i in [r2_dir, rmse_dir, mae_dir]:
+            if not os.path.exists(i):
+                os.mkdir(i)
+            if not os.path.exists(f'{i}/energy'):
+                os.mkdir(f'{i}/energy')
+            if not os.path.exists(f'{i}/force'):
+                os.mkdir(f'{i}/force')
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/energy',error='R2', type='E', ymin=0.9, ymax=1.05)
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{r2_dir}/force',error='R2', type='F', ymin=0.9, ymax=1.05)
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{rmse_dir}/energy',error='RMSE', type='E')
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{rmse_dir}/force',error='RMSE', type='F')
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{mae_dir}/energy',error='MAE', type='E')
+        N2p2AnalyzeFlow.plot_epoch_error(directory, save_dir=f'{mae_dir}/force',error='MAE', type='F')
         # plot dft vs pred
-        print(directory)
+        # print(directory)
         # N2p2AnalyzeFlow.plot_dft_pred(f'{directory}/analyze',
         #                               save_path='/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/dft_vs_pred',
         #                               setting_path='/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/scp/original',
@@ -287,10 +287,10 @@ if __name__ == '__main__':
         #                               type='E',
         #                               prefix = i
         #                               )
-        N2p2AnalyzeFlow.plot_dft_pred(f'{directory}/analyze',
-                                      save_path='/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/dft_vs_pred',
-                                      setting_path='/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/scp/original',
-                                      epoch = 10,
-                                      type='F',
-                                      prefix = i
-                                      )
+        # N2p2AnalyzeFlow.plot_dft_pred(f'{directory}/analyze',
+        #                               save_path='/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/dft_vs_pred',
+        #                               setting_path='/Users/y1u0d2/desktop/Lab/result/nnp-train/20211126/scp/original',
+        #                               epoch = 10,
+        #                               type='F',
+        #                               prefix = i
+        #                               )
