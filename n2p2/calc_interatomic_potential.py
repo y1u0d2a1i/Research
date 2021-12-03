@@ -17,7 +17,7 @@ class InterAtomicPotential():
 
     def set_up_predict(self, dir_name):
         target_dir = f'{self.root_dir}/{dir_name}'
-        original_dir = f'{target_dir}/original'
+        original_dir = f'{self.root_dir}/original'
         if not os.path.exists(target_dir):
             os.mkdir(target_dir)
         if not os.path.exists(original_dir):
@@ -68,7 +68,7 @@ class InterAtomicPotential():
     def flow(self):
         r_from = self.r_from
         r_to = self.r_to
-        r_space = self.r_space
+        r_space = self.space
         species = self.species
         distance_list = np.linspace(r_from, r_to, r_space)
         energy_df = pd.DataFrame(columns=['distance', 'energy', 'center', 'another'])
@@ -77,11 +77,11 @@ class InterAtomicPotential():
             dir_name = f'nnp-predict_{distance}'
             target_dir = f'{self.root_dir}/{dir_name}'
             self.set_up_predict(dir_name)
-            self.make_structure(target_dir=target_dir)
+            self.make_structure(target_dir=target_dir, distance=distance)
             self.run_nnp_predict(target_dir=target_dir)
             energy = self.get_enery(target_dir=target_dir)
             energy_df.loc[f'{i}'] = [distance, energy, species[0], species[1]]
-        energy_df.to_csv(f'{self.root_dir}/two-body_{species[0]}_{species[1]}', index=False)
+        energy_df.to_csv(f'{self.root_dir}/two-body_{species[0]}_{species[1]}.csv', index=False)
 
 
 if __name__ == "__main__":
@@ -90,7 +90,7 @@ if __name__ == "__main__":
         r_from=0.5,
         r_to=15,
         space=50,
-        species=('Si', '0')
+        species=('Si', 'O')
     )
     obj.flow()
 
