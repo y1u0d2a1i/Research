@@ -17,6 +17,16 @@ params = [
     [15, 10],
     [15, 15],
 ]
+params = [
+    [10, 3],
+    [10, 4],
+    [10, 5],
+    [10, 6],
+    [10, 7],
+    [10, 8],
+    [10, 9],
+    [10, 10],
+]
 obj = n2p2TrainingFlow('/home/y1u0d2/Program/n2p2/two-body')
 for param in params:
     r_cut = param[0]

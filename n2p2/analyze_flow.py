@@ -86,8 +86,10 @@ class N2p2AnalyzeFlow():
         if error not in error_list:
             print('invalid error name')
             return
-        r_cut = directory.split('/')[-1].split('_')[1]
-        num_pairs = directory.split('/')[-1].split('_')[-1]
+        # r_cut = directory.split('/')[-1].split('_')[1]
+        # num_pairs = directory.split('/')[-1].split('_')[-1]
+        r_cut = 5
+        num_pairs = 3
         if os.path.exists(f'{directory}/analyze/score_{type}.csv'):
             df = pd.read_csv(f'{directory}/analyze/score_{type}.csv')
             df['r_cut'] = r_cut
@@ -116,7 +118,6 @@ class N2p2AnalyzeFlow():
         :param type: E(Energy) or F(Force)
         :return:
         """
-        # csv_path = '/Users/y1u0d2/Desktop/Lab/result/nnp-train/20211126/scp/nnp-train_15_10'
         epoch = str(epoch).zfill(2)
         base_df = get_reindex_base()
         if type == "E":
@@ -172,17 +173,17 @@ class N2p2AnalyzeFlow():
             fig, ax = plt.subplots()
             plt.plot(x, y, color='red')
             ax.scatter(df_concat[df_concat.type == 'train']['E_ref_sio2'], df_concat[df_concat.type == 'train']['E_nnp_sio2'])
-            ax.set_title('Train : DFT vs Prediction')
-            ax.set_xlabel('DFT_train')
-            ax.set_ylabel('Prediction_train')
+            ax.set_title('Train : DFT_E vs Pred_E')
+            ax.set_xlabel('DFT_E')
+            ax.set_ylabel('Pred_E')
             fig.savefig(f'{save_path}/train_energy_{prefix}.png')
             # test
             fig, ax = plt.subplots()
             plt.plot(x, y, color='red')
             ax.scatter(df_concat[df_concat.type == 'test']['E_ref_sio2'], df_concat[df_concat.type == 'test']['E_nnp_sio2'])
-            ax.set_title('test : DFT vs Prediction')
-            ax.set_xlabel('DFT_test')
-            ax.set_ylabel('Prediction_test')
+            ax.set_title('test : DFT_E vs Pred_E')
+            ax.set_xlabel('DFT_E')
+            ax.set_ylabel('Pred_E')
             fig.savefig(f'{save_path}/test_energy_{prefix}.png')
         elif type == "F":
             CONVERT_FACTOR = conv_l/conv_e
@@ -197,18 +198,18 @@ class N2p2AnalyzeFlow():
             fig, ax = plt.subplots()
             plt.plot(x, y, color='red')
             ax.scatter(df_concat[df_concat.type == 'train']['F_ref_from_norm'], df_concat[df_concat.type == 'train']['F_nnp_from_norm'])
-            ax.set_title('Train : DFT vs Prediction')
-            ax.set_xlabel('DFT_train')
-            ax.set_ylabel('Prediction_train')
+            ax.set_title('Train : DFT_F vs Pred_F')
+            ax.set_xlabel('DFT_F')
+            ax.set_ylabel('Pred_F')
             fig.savefig(f'{save_path}/train_force_{prefix}.png')
             # test
             fig, ax = plt.subplots()
             plt.plot(x, y, color='red')
             ax.scatter(df_concat[df_concat.type == 'test']['F_ref_from_norm'], df_concat[df_concat.type == 'test']['F_nnp_from_norm'])
-            ax.set_title('test : DFT vs Prediction')
-            ax.set_xlabel('DFT_test')
-            ax.set_ylabel('Prediction_test')
-            fig.savefig(f'{save_path}/test_energy_{prefix}.png')
+            ax.set_title('test : DFT_F vs Pred_F')
+            ax.set_xlabel('DFT_F')
+            ax.set_ylabel('Pred_F')
+            fig.savefig(f'{save_path}/test_force_{prefix}.png')
         
 
 
@@ -218,7 +219,7 @@ if __name__ == '__main__':
         analyze_flow.make_analyze_dir()
         analyze_flow.convert_test_train_csv(type=1)
         analyze_flow.convert_test_train_csv(type=2)
-        base_df = get_reindex_base(is_gpu=True)
+        base_df = get_reindex_base(is_gpu=False)
 
         # Energy
         all_test_csv = glob.glob(f'{dir_path}/analyze/testpoints*')
@@ -258,10 +259,10 @@ if __name__ == '__main__':
                 os.mkdir(f'{scp_dir_path}/{dir_name}')
             shutil.move(f'{dir_path}/analyze', f'{scp_dir_path}/{dir_name}/')
 
-    dirs = glob.glob('/home/y1u0d2/Program/n2p2/20211130_2/beta_13/nnp*')
+    dirs = glob.glob('/Users/y1u0d2/desktop/Lab/result/nnp-train/two-three-body/02/01')
     for i, directory in enumerate(dirs):
         conduct_flow(directory)
-        save_dir = '/home/y1u0d2/Program/n2p2/20211130_2/beta_13/error'
+        save_dir = '/Users/y1u0d2/desktop/Lab/result/nnp-train/two-three-body/02/01/error'
         r2_dir = f'{save_dir}/r2'
         rmse_dir = f'{save_dir}/rmse'
         mae_dir = f'{save_dir}/mae'
