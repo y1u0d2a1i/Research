@@ -47,7 +47,7 @@ class FormatDataSet():
                 # index取得
                 lattice_index = 2
                 position_abs_index = 7
-                # position_frac_index = 8 + (number_of_atom)
+                position_frac_index = 8 + (number_of_atom)
                 energy_index = 8 + number_of_atom * 2
                 force_index = 10 + number_of_atom * 2
 
@@ -69,7 +69,8 @@ class FormatDataSet():
                         export_file.write(f'lattice {lattice}\n')
 
                     # atom
-                    position_block = block[position_abs_index:position_abs_index + number_of_atom]
+                    # position_block = block[position_abs_index:position_abs_index + number_of_atom]
+                    position_block = block[position_frac_index:position_frac_index + number_of_atom]
                     force_block = block[force_index:force_index + number_of_atom]
                     atom_block = []
                     dummy_data = [0.0, 0.0]
@@ -105,6 +106,6 @@ class FormatDataSet():
         export_file.close()
 
 if __name__ == '__main__':
-    obj = FormatDataSet('/Users/y1u0d2/desktop/Lab/data/n2p2_input/convert_unit', 'input.data',
-                        '/Users/y1u0d2/desktop/Lab/Program/python/qmas_data')
+    obj = FormatDataSet('/Users/y1u0d2/desktop/Lab/data/qmas_frac', 'frac.data',
+                        '/Users/y1u0d2/desktop/Lab/data/qmas_data')
     obj.qmas_to_n2p2()
