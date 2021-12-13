@@ -81,7 +81,7 @@ if __name__ == '__main__':
                 run_lmp(path_to_target)
                 natom = get_thermo_csv_from_log(target_dir=path_to_target,
                                                 output_dir=path_to_target)
-                plot_opt(path_to_target, structure, natom, is_gpu=True)
+                plot_opt(path_to_target, structure, natom, is_gpu=is_gpu)
             except Exception as e:
                 print('failed to finish')
                 continue
