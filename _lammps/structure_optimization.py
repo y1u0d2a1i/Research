@@ -36,8 +36,8 @@ def run_lmp(path_to_target):
         raise FileNotFoundError('not sufficient')
 
 
-def plot_opt(path_to_target, target_structure, natom):
-    df = get_reindex_base()
+def plot_opt(path_to_target, target_structure, natom, is_gpu=False):
+    df = get_reindex_base(is_gpu=is_gpu)
     df['Vol_a'] = df['Vol'] / df['natom']
     df['E_a'] = df['E'] / df['natom']
     # 元データ
@@ -79,10 +79,11 @@ if __name__ == '__main__':
             setup(model=path_to_model, path_to_target=path_to_target, path_to_config=path_to_config)
             try:
                 run_lmp(path_to_target)
+                natom = get_thermo_csv_from_log(target_dir=path_to_target,
+                                                output_dir=path_to_target)
+                plot_opt(path_to_target, structure, natom, is_gpu=True)
             except Exception as e:
                 print('failed to finish')
                 continue
-            natom = get_thermo_csv_from_log(target_dir=path_to_target, output_dir=path_to_target)
-            plot_opt(path_to_target, structure, natom)
 
 
