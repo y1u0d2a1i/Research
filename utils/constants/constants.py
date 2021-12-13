@@ -13,3 +13,18 @@ class Constants:
             'data_stishovite'
         ]
         return PATH
+
+
+    @staticmethod
+    def structures():
+        structures = [
+            'alpha-critobalite',
+            'alpha-quartz',
+            'beta-quartz',
+            'beta-trydymite',
+            'coesite',
+            'Fdd2-beta-critobalite',
+            'hex-trydymite',
+            'stishovite'
+        ]
+        return structures
