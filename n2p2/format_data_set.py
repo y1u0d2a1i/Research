@@ -92,7 +92,7 @@ class FormatDataSet():
                         atom_str = ' '.join(atom)
                         export_file.write(f'atom {atom_str}\n')
 
-                    # TODO energy
+                    # energy
                     energy = float(block[energy_index].split()[1]) * self.CONVERT_EV
                     export_file.write(f'energy {energy}\n')
 

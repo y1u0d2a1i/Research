@@ -53,16 +53,28 @@ class InterAtomicPotential():
         os.chdir(self.root_dir)
 
     # get energy from energy.out
-    def get_enery(self, target_dir):
-        if not os.path.exists(f'{target_dir}/energy.out'):
+    # def get_energy(self, target_dir):
+    #     if not os.path.exists(f'{target_dir}/energy.out'):
+    #         print('no energy.out')
+    #         return
+    #     else:
+    #         obj = ConvertCsv(target_dir=target_dir, output_dir=target_dir)
+    #         obj.convert_n2p2_output_to_csv(header_index=11, target_file='energy.out')
+    #         df = pd.read_csv(f'{target_dir}/energy.out.csv')
+    #         energy = df.iat[0,0]
+    #         return energy
+
+    def get_energy(self, target_dir):
+        if not os.path.exists(f'{target_dir}/nnatoms.out'):
             print('no energy.out')
             return
         else:
             obj = ConvertCsv(target_dir=target_dir, output_dir=target_dir)
-            obj.convert_n2p2_output_to_csv(header_index=11, target_file='energy.out')
-            df = pd.read_csv(f'{target_dir}/energy.out.csv')
-            energy = df.iat[0,0]
-            return energy
+            obj.convert_n2p2_output_to_csv(header_index=11, target_file='nnatoms.out')
+            df = pd.read_csv(f'{target_dir}/nnatoms.out.csv')
+            energy_1 = df.iat[0,3]
+            energy_2 = df.iat[1,3]
+            return float(energy_1) + float(energy_2)
 
     # conduct all flow
     def flow(self):
@@ -76,20 +88,20 @@ class InterAtomicPotential():
             distance = round(distance, 3)
             dir_name = f'nnp-predict_{distance}'
             target_dir = f'{self.root_dir}/{dir_name}'
-            self.set_up_predict(dir_name)
-            self.make_structure(target_dir=target_dir, distance=distance)
-            self.run_nnp_predict(target_dir=target_dir)
-            energy = self.get_enery(target_dir=target_dir)
+            # self.set_up_predict(dir_name)
+            # self.make_structure(target_dir=target_dir, distance=distance)
+            # self.run_nnp_predict(target_dir=target_dir)
+            energy = self.get_energy(target_dir=target_dir)
             energy_df.loc[f'{i}'] = [distance, energy, species[0], species[1]]
         energy_df.to_csv(f'{self.root_dir}/two-body_{species[0]}_{species[1]}.csv', index=False)
 
 
 if __name__ == "__main__":
     obj = InterAtomicPotential(
-        root_dir='/home/y1u0d2/Program/n2p2/interatomic/01',
+        root_dir='/Users/y1u0d2/desktop/Lab/result/two-body-interatomic/wip/Si-O',
         r_from=0.5,
-        r_to=15,
-        space=50,
+        r_to=11,
+        space=100,
         species=('Si', 'O')
     )
     obj.flow()

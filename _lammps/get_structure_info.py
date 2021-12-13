@@ -42,9 +42,15 @@ def get_atom_coord(structure_block):
             line = fix_e(line)
         if '-' in line:
             line = fix_negative(line)
+            if not line:
+                return
         line = line.split(' ')
         if len(line) > 3:
             line = line[1:4]
+        for elm in line:
+            if float(elm) >= 1:
+                print("1以上の値があります")
+                return
         line.insert(0, 'basis')
         line.append('&')
         line = ' '.join(line)
@@ -69,7 +75,9 @@ def fix_negative(line):
     tmp_line = []
     for tmp in line:
         if '-' in tmp:
-            tmp = '0.0'
+            print('include negative value')
+            return
+            # tmp = '0.0'
         tmp_line.append(tmp)
     line = ' '.join(tmp_line)
     return line
@@ -81,17 +89,24 @@ def get_create_atom_line(structure_block, emap):
         atom = line.split(" ")[4]
         atom_num = emap[atom]
         coord.append(f'basis {i+1} {atom_num} &')
+    # remove & from last row
+    coord[-1] = ' '.join(coord[-1].split(' ')[0:-1])
     return coord
 
-structure_block = get_structure_block('alpha-quartz', 1941)
-l_block = get_lattice(structure_block)
-coord = get_atom_coord(structure_block)
-create_atom_lines = get_create_atom_line(structure_block, emap={'Si':1, 'O':2})
-save_dir = "/Users/y1u0d2/desktop/Lab/result/lammps/20211207"
-with open(f'{save_dir}/lammps.txt', 'w') as f:
-    for line in l_block:
-        f.write(f'{line} \n')
-    for line in coord:
-        f.write(f'{line} \n')
-    for line in create_atom_lines:
-        f.write(f'{line} \n')
+structure = 'coesite'
+idx = 4192
+save_dir = "/Users/y1u0d2/desktop/Lab/result/lammps/info/coesite"
+
+for idx in range(4300, 5499):
+    structure_block = get_structure_block(structure, idx)
+    l_block = get_lattice(structure_block)
+    coord = get_atom_coord(structure_block)
+    create_atom_lines = get_create_atom_line(structure_block, emap={'Si':1, 'O':2})
+    if l_block and coord and create_atom_lines:
+        with open(f'{save_dir}/{structure}_{idx}_lammps.txt', 'w') as f:
+            for line in l_block:
+                f.write(f'{line} \n')
+            for line in coord:
+                f.write(f'{line} \n')
+            for line in create_atom_lines:
+                f.write(f'{line} \n')
