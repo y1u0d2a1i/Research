@@ -28,3 +28,17 @@ class Constants:
             'stishovite'
         ]
         return structures
+
+    @staticmethod
+    def structures_natom():
+        structures = {
+            'alpha-critobalite':48,
+            'alpha-quartz':36,
+            'beta-quartz':36,
+            'beta-trydymite':48,
+            'coesite':24,
+            'Fdd2-beta-critobalite':48,
+            'hex-trydymite':48,
+            'stishovite':48
+        }
+        return structures
