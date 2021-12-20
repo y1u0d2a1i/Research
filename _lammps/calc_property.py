@@ -2,6 +2,7 @@ import glob
 import os
 
 from _lammps.structure_optimization import convert_xsf_to_lammps_data, setup, run_lmp
+from _lammps.fix_orthogonal import fix_orthogonal
 
 def calc_property(model, config, structure, path_to_target, run_file):
     """
@@ -16,6 +17,9 @@ def calc_property(model, config, structure, path_to_target, run_file):
         xsf_file=structure,
         path_to_save_dir=path_to_target,
         save_name='structure.data'
+    )
+    fix_orthogonal(
+        path_to_target=f'{path_to_target}/structure.data'
     )
     setup(model, path_to_target, config)
     run_lmp(path_to_target, run_file)
