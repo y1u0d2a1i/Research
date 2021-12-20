@@ -27,10 +27,10 @@ def setup(model, path_to_target, path_to_config):
         shutil.copy(file, path_to_target)
 
 
-def run_lmp(path_to_target):
+def run_lmp(path_to_target, run_file):
     os.chdir(path_to_target)
-    if os.path.exists(f'{path_to_target}/nnp-data') and os.path.exists(f'{path_to_target}/opt.lmp'):
-        p = subprocess.Popen('mpirun -np 4 lmp_mpi -in opt.lmp', shell=True)
+    if os.path.exists(f'{path_to_target}/nnp-data') and os.path.exists(f'{path_to_target}/{run_file}'):
+        p = subprocess.Popen(f'mpirun -np 4 lmp_mpi -in {run_file}', shell=True)
         p.wait()
     else:
         raise FileNotFoundError('not sufficient')
@@ -84,7 +84,7 @@ if __name__ == '__main__':
             convert_xsf_to_lammps_data(xsf_file=file, path_to_save_dir=path_to_target, save_name='structure.data')
             setup(model=path_to_model, path_to_target=path_to_target, path_to_config=path_to_config)
             try:
-                run_lmp(path_to_target)
+                run_lmp(path_to_target, run_file='opt.lmp')
                 natom = get_thermo_csv_from_log(target_dir=path_to_target,
                                                 output_dir=path_to_target)
                 plot_opt(path_to_target, structure, natom, is_gpu=is_gpu)
