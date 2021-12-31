@@ -25,7 +25,7 @@ def calc_property(model, config, structure, path_to_target, run_file):
     run_lmp(path_to_target, run_file)
 
 if __name__ == '__main__':
-    model = '/home/y1u0d2/Program/lammps/models/SiO2/03'
+    model = '/home/y1u0d2/Program/lammps/models/SiO2/04'
     config = '/home/y1u0d2/Program/lammps/scripts/elastic/20211220/config'
     path_to_root = '/home/y1u0d2/Program/lammps/scripts/elastic/20211220'
 

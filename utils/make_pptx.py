@@ -3,7 +3,7 @@ from pptx.util import Inches
 from PIL import Image
 import glob
 
-TARGET_DIR = '/Users/y1u0d2/desktop/Lab/result/nnp-train/two-three-body/04/01_wip/error/rmse'
+TARGET_DIR = '/Users/y1u0d2/desktop/Lab/result/nnp-train/two-three-body/05/error/r2'
 energy_pic = glob.glob(f'{TARGET_DIR}/energy/*.png')
 force_pic = glob.glob(f'{TARGET_DIR}/force/*.png')
 energy_pic.sort()
@@ -11,7 +11,7 @@ force_pic.sort()
 
 IMG_DISPLAY_HEIGHT = Inches(3)  # 画像サイズ
 PIC_PER_PAGE = 4
-OUTPUT_FILE_NAME = f"/Users/y1u0d2/desktop/Lab/result/nnp-train/two-three-body/04/01_wip/rmse.pptx"  # 出力ファイル名
+OUTPUT_FILE_NAME = f"/Users/y1u0d2/desktop/Lab/result/nnp-train/two-three-body/05/r2.pptx"  # 出力ファイル名
 
 slides=0
 if len(energy_pic) % 2 == 0:
