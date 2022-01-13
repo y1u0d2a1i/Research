@@ -21,9 +21,8 @@ def rdf_from_dump(path_to_dump, save_dir,rcut=15, bins=100):
     pipeline = import_file(path_to_dump)
     modifier = CoordinationAnalysisModifier(cutoff=rcut, number_of_bins=bins, partial=True)
     pipeline.modifiers.append(modifier)
-
-    rdf_table = pipeline.compute(pipeline.source.num_frames).tables['coordination-rdf']
-
+    pipeline.compute(pipeline.source.num_frames)
+    # rdf_table = pipeline.compute(pipeline.source.num_frames).tables['coordination-rdf']
     export_file(pipeline, f"{save_dir}/rdf.txt", "txt/table", key="coordination-rdf")
     convert_csv(path_to_txt=f"{save_dir}/rdf.txt", path_to_csv=save_dir)
 
@@ -62,7 +61,7 @@ def convert_csv(path_to_txt, path_to_csv, filename=None):
 
 
 if __name__ == '__main__':
-    root_dir = '/Users/y1u0d2/desktop/Lab/result/lammps/structure-optimization/02'
+    root_dir = '/Users/y1u0d2/desktop/Lab/result/lammps/structure-optimization/04'
     structures = Constants.structures()
     for structure in structures:
         dirs = glob.glob(f'{root_dir}/{structure}/*')

@@ -12,10 +12,10 @@ from utils.constants.dir_path import DataDirPath
 from utils.constants.constants import Constants
 
 
-def calc_adf(cutoff=10):
+def calc_adf(path_to_output,cutoff=10):
     xsf = DataDirPath.xsf()
     dirs = glob.glob(f'{xsf}/data_*')
-    path_to_output = "/Users/y1u0d2/desktop/Lab/result/adf/ovito/out_txt"
+    # path_to_output = "/Users/y1u0d2/desktop/Lab/result/adf/ovito/out_txt"
     for _dir in dirs:
         files = glob.glob(f'{_dir}/data_*')
         structure = _dir.split('/')[-1].split('_')[-1]
@@ -65,14 +65,15 @@ def divide_by_natom():
 if __name__ == '__main__':
     txt_dir = '/Users/y1u0d2/desktop/Lab/result/adf/ovito/out_txt'
     path_to_output = '/Users/y1u0d2/desktop/Lab/result/adf/ovito/csv'
-    dirs = glob.glob(f'{txt_dir}/*')
-    for _dir in dirs:
-        structure = _dir.split('/')[-1]
-        files = glob.glob(f'{_dir}/*.txt')
-        for txt_file in files:
-            structure_idx = txt_file.split()
-            convert_txt_to_csv(txt_file,
-                               path_to_output=f'{path_to_output}/{structure}',
-                               structure=structure,
-                               structure_idx= txt_file.split('/')[-1].split('.')[0].split('_')[-1]
-                               )
+    calc_adf(path_to_output=path_to_output, cutoff=3)
+    # dirs = glob.glob(f'{txt_dir}/*')
+    # for _dir in dirs:
+    #     structure = _dir.split('/')[-1]
+        # files = glob.glob(f'{_dir}/*.txt')
+        # for txt_file in files:
+        #     structure_idx = txt_file.split()
+        #     convert_txt_to_csv(txt_file,
+        #                        path_to_output=f'{path_to_output}/{structure}',
+        #                        structure=structure,
+        #                        structure_idx= txt_file.split('/')[-1].split('.')[0].split('_')[-1]
+        #                        )

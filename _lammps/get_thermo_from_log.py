@@ -1,4 +1,6 @@
 import csv
+import glob
+import pandas as pd
 
 
 def get_thermo_csv_from_log(target_dir, output_dir):
@@ -26,3 +28,17 @@ def get_thermo_csv_from_log(target_dir, output_dir):
                 line = list(filter(None, line.split(' ')))
                 writer.writerow(line)
     return natom
+
+def get_lattice_series_from_thermo_csv(_dir):
+    # id = _dir.split('/')[-1].split('_')[1]
+    id = _dir.split('/')[-1]
+    structure = id.split('_')[1]
+    idx = id.split('_')[-1].split('.')[0]
+    csv_f = glob.glob(f'{_dir}/thermo*.csv')[0]
+    df = pd.read_csv(csv_f)
+    loc_cella = df.columns.get_loc('Cella')
+    # 最終行のlattice部分取得
+    l_series = df.iloc[len(df)-1:len(df),loc_cella:loc_cella+6].copy()
+    l_series.insert(0, 'idx', idx)
+    l_series.insert(0, 'structure', structure)
+    return l_series
