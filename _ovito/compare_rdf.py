@@ -21,8 +21,12 @@ def rdf_from_dump(path_to_dump, save_dir,rcut=15, bins=100):
     pipeline = import_file(path_to_dump)
     modifier = CoordinationAnalysisModifier(cutoff=rcut, number_of_bins=bins, partial=True)
     pipeline.modifiers.append(modifier)
-    pipeline.compute(pipeline.source.num_frames)
+    print(pipeline.source.num_frames)
+    pipeline = pipeline.compute(pipeline.source.num_frames)
+    # data = pipeline.compute(pipeline.source.num_frames).tables['coordination-rdf'].xy()
+    # np.savetxt(f"{save_dir}/rdf.txt", data)
     # rdf_table = pipeline.compute(pipeline.source.num_frames).tables['coordination-rdf']
+    # print(rdf_table)
     export_file(pipeline, f"{save_dir}/rdf.txt", "txt/table", key="coordination-rdf")
     convert_csv(path_to_txt=f"{save_dir}/rdf.txt", path_to_csv=save_dir)
 

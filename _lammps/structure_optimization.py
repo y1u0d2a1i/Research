@@ -36,7 +36,7 @@ def run_lmp(path_to_target, run_file):
         raise FileNotFoundError('not sufficient')
 
 
-def plot_opt(path_to_target, target_structure, natom, savename=None, is_gpu=False, is_min=False):
+def plot_opt(path_to_target, target_structure, natom, idx=None,savename=None, is_gpu=False, is_min=False):
     df = get_reindex_base(is_gpu=is_gpu)
     df['Vol_a'] = df['Vol'] / df['natom']
     df['E_a'] = df['E'] / df['natom']
@@ -45,7 +45,10 @@ def plot_opt(path_to_target, target_structure, natom, savename=None, is_gpu=Fals
     if is_min:
         tmp = tmp.groupby('Vol').min()
     plt.figure(figsize=(10, 8))
-    plt.title(f'{target_structure}: structure optimization')
+    if idx is not None:
+        plt.title(f'{target_structure}-{idx}: structure optimization')
+    else:
+        plt.title(f'{target_structure}: structure optimization')
     plt.xlabel('Vol/atom (ang^3)')
     plt.ylabel('Energy/atom (eV)')
     plt.scatter(tmp.Vol_a, tmp.E_a, color="blue")
