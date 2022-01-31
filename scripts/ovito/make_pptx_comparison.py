@@ -7,7 +7,7 @@ from utils.constants.constants import Constants
 
 
 structures = Constants.structures()
-TARGET_DIR = '/Users/y1u0d2/desktop/Lab/result/lammps/structure-optimization/07'
+TARGET_DIR = '/Users/y1u0d2/desktop/Lab/result/lammps/structure-optimization/10'
 all_pic = []
 for structure in structures:
     dirs = glob.glob(f'{TARGET_DIR}/{structure}/*')
@@ -20,7 +20,7 @@ for structure in structures:
 
 IMG_DISPLAY_HEIGHT = Inches(3.5)  # 画像サイズ
 PIC_PER_PAGE = 4
-OUTPUT_FILE_NAME = '/Users/y1u0d2/desktop/Lab/result/lammps/structure-optimization/07/rdf_comparison.pptx'  # 出力ファイル名
+OUTPUT_FILE_NAME = '/Users/y1u0d2/desktop/Lab/result/lammps/structure-optimization/10/rdf_comparison.pptx'  # 出力ファイル名
 
 slides=len(all_pic)/4
 

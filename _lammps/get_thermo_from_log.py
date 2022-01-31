@@ -42,3 +42,20 @@ def get_lattice_series_from_thermo_csv(_dir):
     l_series.insert(0, 'idx', idx)
     l_series.insert(0, 'structure', structure)
     return l_series
+
+def get_last_structure_info_series_from_thermo_csv(_dir):
+    # id = _dir.split('/')[-1].split('_')[1]
+    id = _dir.split('/')[-1]
+    structure = id.split('_')[1]
+    idx = id.split('_')[-1].split('.')[0]
+    csv_f = glob.glob(f'{_dir}/thermo*.csv')[0]
+    df = pd.read_csv(csv_f)
+    natom = csv_f.split('/')[-1].split('.')[0].split('_')[-1]
+    loc_eng = df.columns.get_loc('TotEng')
+    # 最終行のlattice部分取得
+    l_series = df.iloc[len(df)-1:len(df),loc_eng:loc_eng+4].copy()
+    l_series.insert(0, 'natom', natom)
+    l_series.insert(0, 'idx', idx)
+    l_series.insert(0, 'structure', structure)
+    l_series['Eng_a'] = round(float(l_series['TotEng']) / float(l_series['natom']), 4)
+    return l_series

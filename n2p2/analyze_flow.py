@@ -108,7 +108,7 @@ class N2p2AnalyzeFlow():
             fig.savefig(f'{save_dir}/{type}_r_cut-{r_cut}_pairs-{num_pairs}.png')
     
     @staticmethod
-    def plot_dft_pred(csv_path, save_path, setting_path, epoch, type='E', prefix=0):
+    def plot_dft_pred(csv_path, save_path, setting_path, epoch, type='E', prefix=0, is_title=True):
         """
         plot dft vs pred from n2p2 output csv
         :param save_path: path to save folder
@@ -173,17 +173,19 @@ class N2p2AnalyzeFlow():
             fig, ax = plt.subplots()
             plt.plot(x, y, color='red')
             ax.scatter(df_concat[df_concat.type == 'train']['E_ref_sio2'], df_concat[df_concat.type == 'train']['E_nnp_sio2'])
-            ax.set_title('Train : DFT_E vs Pred_E')
-            ax.set_xlabel('DFT_E')
-            ax.set_ylabel('Pred_E')
+            if is_title:
+                ax.set_title('Train : DFT_E vs Pred_E')
+            ax.set_xlabel('DFT_E (eV)')
+            ax.set_ylabel('Pred_E (eV)')
             fig.savefig(f'{save_path}/train_energy_{prefix}.png')
             # test
             fig, ax = plt.subplots()
             plt.plot(x, y, color='red')
             ax.scatter(df_concat[df_concat.type == 'test']['E_ref_sio2'], df_concat[df_concat.type == 'test']['E_nnp_sio2'])
-            ax.set_title('test : DFT_E vs Pred_E')
-            ax.set_xlabel('DFT_E')
-            ax.set_ylabel('Pred_E')
+            if is_title:
+                ax.set_title('test : DFT_E vs Pred_E')
+            ax.set_xlabel('DFT_E (eV)')
+            ax.set_ylabel('Pred_E (eV)')
             fig.savefig(f'{save_path}/test_energy_{prefix}.png')
         elif type == "F":
             CONVERT_FACTOR = conv_l/conv_e
@@ -198,17 +200,19 @@ class N2p2AnalyzeFlow():
             fig, ax = plt.subplots()
             plt.plot(x, y, color='red')
             ax.scatter(df_concat[df_concat.type == 'train']['F_ref_from_norm'], df_concat[df_concat.type == 'train']['F_nnp_from_norm'])
-            ax.set_title('Train : DFT_F vs Pred_F')
-            ax.set_xlabel('DFT_F')
-            ax.set_ylabel('Pred_F')
+            if is_title:
+                ax.set_title('Train : DFT_F vs Pred_F')
+            ax.set_xlabel('DFT_F (eV/ang)')
+            ax.set_ylabel('Pred_F (eV/ang)')
             fig.savefig(f'{save_path}/train_force_{prefix}.png')
             # test
             fig, ax = plt.subplots()
             plt.plot(x, y, color='red')
             ax.scatter(df_concat[df_concat.type == 'test']['F_ref_from_norm'], df_concat[df_concat.type == 'test']['F_nnp_from_norm'])
-            ax.set_title('test : DFT_F vs Pred_F')
-            ax.set_xlabel('DFT_F')
-            ax.set_ylabel('Pred_F')
+            if is_title:
+                ax.set_title('test : DFT_F vs Pred_F')
+            ax.set_xlabel('DFT_F (eV/ang)')
+            ax.set_ylabel('Pred_F (eV/ang)')
             fig.savefig(f'{save_path}/test_force_{prefix}.png')
         
 
