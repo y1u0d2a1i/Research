@@ -30,6 +30,11 @@ def get_thermo_csv_from_log(target_dir, output_dir):
     return natom
 
 def get_lattice_series_from_thermo_csv(_dir):
+    """
+    get last row of thermo_*.csv
+    :param _dir:
+    :return:
+    """
     # id = _dir.split('/')[-1].split('_')[1]
     id = _dir.split('/')[-1]
     structure = id.split('_')[1]
@@ -52,10 +57,41 @@ def get_last_structure_info_series_from_thermo_csv(_dir):
     df = pd.read_csv(csv_f)
     natom = csv_f.split('/')[-1].split('.')[0].split('_')[-1]
     loc_eng = df.columns.get_loc('TotEng')
+    loc_vol = df.columns.get_loc('Volume')
+    # get initial volume
+    initial_vol = df.iat[0, loc_vol]
     # 最終行のlattice部分取得
     l_series = df.iloc[len(df)-1:len(df),loc_eng:loc_eng+4].copy()
     l_series.insert(0, 'natom', natom)
+    l_series.insert(0,'Vol_s', initial_vol)
     l_series.insert(0, 'idx', idx)
     l_series.insert(0, 'structure', structure)
     l_series['Eng_a'] = round(float(l_series['TotEng']) / float(l_series['natom']), 4)
+    return l_series
+
+def get_lattice_start_end_series_from_thermo_csv(_dir):
+    """
+    get last row of thermo_*.csv
+    :param _dir:
+    :return:
+    """
+    # id = _dir.split('/')[-1].split('_')[1]
+    id = _dir.split('/')[-1]
+    structure = id.split('_')[1]
+    idx = id.split('_')[-1].split('.')[0]
+    csv_f = glob.glob(f'{_dir}/thermo*.csv')[0]
+    df = pd.read_csv(csv_f)
+    loc_cella = df.columns.get_loc('Cella')
+    # get first row
+    l_first_series = df.iloc[0:1,loc_cella:loc_cella+6].copy()
+    l_first_series_columns_dict = {k: f'{k}_s' for k in l_first_series.columns}
+    l_first_series.rename(columns=l_first_series_columns_dict, inplace=True)
+    # l_first_series.insert(0, 'idx', idx)
+    # l_first_series.insert(0, 'structure', structure)
+    # get last row
+    l_series = df.iloc[len(df)-1:len(df),loc_cella:loc_cella+6].copy()
+    l_series.insert(0, 'idx', idx)
+    l_series.insert(0, 'structure', structure)
+    l_series.reset_index(drop=True, inplace=True)
+    l_series = pd.concat([l_series, l_first_series] , axis=1)
     return l_series

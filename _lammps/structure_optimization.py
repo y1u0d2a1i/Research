@@ -7,6 +7,7 @@ import subprocess
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib import animation
 
 from ovito.io import export_file, import_file
 from descriptors.base_info import get_reindex_base
@@ -63,6 +64,48 @@ def plot_opt(path_to_target, target_structure, natom, idx=None,savename=None, is
     else:
         plt.savefig(
         f'{path_to_target}/{savename}.png')
+
+def plot_opt_movie(path_to_target, target_structure, natom, idx=None,savename=None, is_gpu=False, is_min=False):
+    df = get_reindex_base(is_gpu=is_gpu)
+    df['Vol_a'] = df['Vol'] / df['natom']
+    df['E_a'] = df['E'] / df['natom']
+    fig = plt.figure(figsize=(10, 8))
+    ax = fig.add_subplot(111)
+    # 元データ
+    tmp = df[df.structure == target_structure]
+    if is_min:
+        tmp = tmp.groupby('Vol').min()
+
+    # thermo csv
+    df_thermo = pd.read_csv(f'{path_to_target}/thermo_{natom}.csv')
+    df_thermo['Vol_a'] = df_thermo.Volume / natom
+    df_thermo['E_a'] = df_thermo.TotEng / natom
+
+    def plot_movie(frame):
+        ax.cla()
+        if idx is not None:
+            ax.set_title(f'{target_structure}-{idx}: structure optimization')
+        else:
+            ax.set_title(f'{target_structure}: structure optimization')
+        ax.set_xlabel('Vol/atom (ang^3)')
+        ax.set_ylabel('Energy/atom (eV)')
+        ax.scatter(tmp.Vol_a, tmp.E_a, color="blue")
+        ax.plot(df_thermo[:frame].Vol_a, df_thermo[:frame].E_a, lw=3, color="red")
+
+    frames = len(df_thermo)
+    ani = animation.FuncAnimation(fig, plot_movie, frames=frames, interval=10)
+    ani.save(f'{path_to_target}/{savename}.gif', writer="imagemagick")
+    fig.show()
+    # ani.save('sample2.gif', writer='imagemagick')
+    # fig.show()
+    # plt.plot(df_thermo.Vol_a, df_thermo.E_a, lw=3, color="red")
+    # if savename is None:
+    #     plt.savefig(
+    #     f'{path_to_target}/{target_structure}.png')
+    # else:
+    #     plt.savefig(
+    #     f'{path_to_target}/{savename}.png')
+
 
 if __name__ == '__main__':
     path_to_root = "/home/y1u0d2/Program/lammps/scripts/structure-optimization/02"
