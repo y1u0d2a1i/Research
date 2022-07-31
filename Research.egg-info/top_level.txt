@@ -1,0 +1,4 @@
+deepmd
+n2p2
+rdf
+utils

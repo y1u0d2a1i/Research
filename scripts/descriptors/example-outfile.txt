@@ -1,0 +1,69 @@
+#########################################################################
+# Narrow angular symmetry function set, for elements ['Si', 'O']
+#########################################################################
+# r_cutoff       = 5
+# The following settings were used for generating sets
+# of values for the radial parameters r_shift and eta:
+# rule           = imbalzano2018
+# mode           = center
+# nb_param_pairs = 2
+# Sets of values for parameters:
+# r_shift_grid   = [0. 0.]
+# eta_grid       = [0.04 0.04]
+# lambdas        = [-1.  1.]
+# zetas          = [1. 6.]
+
+symfunction_short Si 3 Si Si 4.000E-02 -1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si Si 4.000E-02  1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si Si 4.000E-02 -1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si Si 4.000E-02  1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si Si 4.000E-02 -1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si Si 4.000E-02  1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si Si 4.000E-02 -1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si Si 4.000E-02  1 6.000E+00 5.000E+00 0.000E+00
+
+symfunction_short Si 3 Si O  4.000E-02 -1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si O  4.000E-02  1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si O  4.000E-02 -1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si O  4.000E-02  1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si O  4.000E-02 -1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si O  4.000E-02  1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si O  4.000E-02 -1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 Si O  4.000E-02  1 6.000E+00 5.000E+00 0.000E+00
+
+symfunction_short Si 3 O  O  4.000E-02 -1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 O  O  4.000E-02  1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 O  O  4.000E-02 -1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 O  O  4.000E-02  1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 O  O  4.000E-02 -1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 O  O  4.000E-02  1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 O  O  4.000E-02 -1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short Si 3 O  O  4.000E-02  1 6.000E+00 5.000E+00 0.000E+00
+
+symfunction_short O  3 Si Si 4.000E-02 -1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si Si 4.000E-02  1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si Si 4.000E-02 -1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si Si 4.000E-02  1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si Si 4.000E-02 -1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si Si 4.000E-02  1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si Si 4.000E-02 -1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si Si 4.000E-02  1 6.000E+00 5.000E+00 0.000E+00
+
+symfunction_short O  3 Si O  4.000E-02 -1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si O  4.000E-02  1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si O  4.000E-02 -1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si O  4.000E-02  1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si O  4.000E-02 -1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si O  4.000E-02  1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si O  4.000E-02 -1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 Si O  4.000E-02  1 6.000E+00 5.000E+00 0.000E+00
+
+symfunction_short O  3 O  O  4.000E-02 -1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 O  O  4.000E-02  1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 O  O  4.000E-02 -1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 O  O  4.000E-02  1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 O  O  4.000E-02 -1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 O  O  4.000E-02  1 1.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 O  O  4.000E-02 -1 6.000E+00 5.000E+00 0.000E+00
+symfunction_short O  3 O  O  4.000E-02  1 6.000E+00 5.000E+00 0.000E+00
+
